@@ -10,9 +10,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/idTILQuery"
+        android:layout_above="@+id/linear2"
         android:layout_alignParentTop="true"
-        android:layout_margin="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
         android:padding="5dp">
 
         <LinearLayout
@@ -41,34 +44,56 @@
                 android:text="Response"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
-        </LinearLayout>
 
+        </LinearLayout>
     </ScrollView>
-    <!-- text field for asking question-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/idTILQuery"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="5dp"
-        android:hint="Enter your query"
+        android:orientation="horizontal"
         android:padding="5dp"
-        android:textColorHint="@color/white"
-        app:hintTextColor="@color/white">
+        android:id="@+id/linear2"
+        android:layout_alignParentBottom="true"
+        >
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/idEdtQuery"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="8dp"
+            android:src="@drawable/ic_mic"
+            android:id="@+id/idMic"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/idTILQuery"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/purple_200"
-            android:drawableEnd="@drawable/ic_send"
-            android:drawableTint="@color/white"
-            android:ems="10"
-            android:imeOptions="actionSend"
-            android:importantForAutofill="no"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="12dp"
+            android:hint="Enter your query"
+            android:padding="5dp"
             android:textColorHint="@color/white"
-            android:textSize="14sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            app:hintTextColor="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/idEdtQuery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/purple_200"
+                android:drawableEnd="@drawable/ic_send"
+                android:drawableTint="@color/white"
+                android:ems="10"
+                android:imeOptions="actionSend"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <!-- text field for asking question-->
+
 </RelativeLayout>

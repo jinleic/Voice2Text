@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.EditorInfo
+import android.speech.RecognizerIntent
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
@@ -16,6 +18,10 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
+import android.content.Intent
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,9 +29,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var responseTV: TextView
     lateinit var questionTV: TextView
     lateinit var queryEdt: TextInputEditText
+    lateinit var micIV: ImageView
 
     var url = "https://api.openai.com/v1/completions"
-
+    private val REQUEST_CODE_SPEECH_INPUT = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +40,38 @@ class MainActivity : AppCompatActivity() {
         responseTV = findViewById(R.id.idTVResponse)
         questionTV = findViewById(R.id.idTVQuestion)
         queryEdt = findViewById(R.id.idEdtQuery)
+        micIV = findViewById(R.id.idMic)
+
+        // setting the imageView to load the speech
+        micIV.setOnClickListener{
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE,
+                Locale.getDefault()
+            )
+
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text")
+
+            try {
+                startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT)
+            }catch (e: Exception)
+            {
+                // on below line we are displaying error message in toast
+                Toast
+                    .makeText(
+                        this@MainActivity, " " + e.message,
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+            }
+        }
+
 
         // adding editor action listener for edit text on below line.
         queryEdt.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
@@ -110,6 +149,20 @@ class MainActivity : AppCompatActivity() {
         // on below line adding our request to queue.
         queue.add(postRequest)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == REQUEST_CODE_SPEECH_INPUT){
+            if(resultCode == RESULT_OK && data != null){
+                val res: ArrayList<String> =
+                    data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) as ArrayList<String>
+
+                queryEdt.setText(Objects.requireNonNull(res)[0])
+            }
+        }
+    }
+
 }
 
 
