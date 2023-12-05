@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import android.widget.Button
+import android.speech.tts.TextToSpeech
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -19,17 +21,20 @@ import com.android.volley.toolbox.Volley
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
 import android.content.Intent
+import android.content.SyncStatusObserver
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // creating variables on below line.
     lateinit var responseTV: TextView
     lateinit var questionTV: TextView
     lateinit var queryEdt: TextInputEditText
     lateinit var micIV: ImageView
+    lateinit var btnSpeak : Button
+    lateinit var tts : TextToSpeech
 
     var url = "https://api.openai.com/v1/completions"
     private val REQUEST_CODE_SPEECH_INPUT = 1
@@ -41,6 +46,12 @@ class MainActivity : AppCompatActivity() {
         questionTV = findViewById(R.id.idTVQuestion)
         queryEdt = findViewById(R.id.idEdtQuery)
         micIV = findViewById(R.id.idMic)
+        btnSpeak = findViewById(R.id.btn_speak)
+
+        // for text to speech
+        btnSpeak!!.isEnabled = false
+        tts = TextToSpeech(this,this)
+        btnSpeak.setOnClickListener {speakOut()}
 
         // setting the imageView to load the speech
         micIV.setOnClickListener{
@@ -91,6 +102,31 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    override fun onInit(status: Int){
+        if(status == TextToSpeech.SUCCESS){
+            val result = tts!!.setLanguage(Locale.US)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS","The Language not supported!")
+            } else {
+                btnSpeak!!.isEnabled = true
+            }
+        }
+    }
+
+    private fun speakOut(){
+        val text = responseTV.text.toString()
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    public override fun onDestroy() {
+        // shutdown TTS when the actibity is destroyed
+        if(tts!=null){
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        super.onDestroy()
+    }
+
     private fun getResponse(query: String) {
         // setting text on for question on below line.
         questionTV.text = query
@@ -127,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                     // adding headers on below line.
                     params["Content-Type"] = "application/json"
                     params["Authorization"] =
-                        "Bearer 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"
+                        "Bearer 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"
                     return params;
                 }
             }
