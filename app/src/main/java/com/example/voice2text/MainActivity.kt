@@ -22,6 +22,7 @@ import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
 import android.content.Intent
 import android.content.SyncStatusObserver
+import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -36,7 +37,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     lateinit var btnSpeak : Button
     lateinit var tts : TextToSpeech
 
-    var url = "https://api.openai.com/v1/completions"
+//    var url = "https://api.openai.com/v1/completions"
+
+    var url = "https://api.openai.com/v1/chat/completions"
+
+
     private val REQUEST_CODE_SPEECH_INPUT = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,25 +139,49 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // creating a queue for request queue.
         val queue: RequestQueue = Volley.newRequestQueue(applicationContext)
         // creating a json object on below line.
-        val jsonObject: JSONObject? = JSONObject()
-        // adding params to json object.
-        jsonObject?.put("model", "text-davinci-003")
-        jsonObject?.put("prompt", query)
-        jsonObject?.put("temperature", 0)
-        jsonObject?.put("max_tokens", 100)
-        jsonObject?.put("top_p", 1)
-        jsonObject?.put("frequency_penalty", 0.0)
-        jsonObject?.put("presence_penalty", 0.0)
+//        val jsonObject: JSONObject? = JSONObject()
+//        // adding params to json object.
+//        jsonObject?.put("model", "text-davinci-003")
+//        jsonObject?.put("prompt", query)
+//        jsonObject?.put("temperature", 0)
+//        jsonObject?.put("max_tokens", 100)
+//        jsonObject?.put("top_p", 1)
+//        jsonObject?.put("frequency_penalty", 0.0)
+//        jsonObject?.put("presence_penalty", 0.0)
+
+        // Creating a new JSON object for the request
+        val jsonObject = JSONObject().apply {
+            put("model", "gpt-3.5-turbo")
+            put("temperature", 0.7)
+
+            // Creating a JSON array for messages
+            val messagesArray = JSONArray()
+
+            // Creating a message object and adding it to the messages array
+            val messageObject = JSONObject().apply {
+                put("role", "user")
+                put("content", query)
+            }
+            messagesArray.put(messageObject)
+
+            // Adding the messages array to the main JSON object
+            put("messages", messagesArray)
+        }
 
         // on below line making json object request.
         val postRequest: JsonObjectRequest =
-            // on below line making json object request.
             object : JsonObjectRequest(Method.POST, url, jsonObject,
                 Response.Listener { response ->
-                    // on below line getting response message and setting it to text view.
-                    val responseMsg: String =
-                        response.getJSONArray("choices").getJSONObject(0).getString("text")
-                    responseTV.text = responseMsg
+                    // Extracting the message content from the response
+                    val choicesArray = response.getJSONArray("choices")
+                    if (choicesArray.length() > 0) {
+                        val firstChoice = choicesArray.getJSONObject(0)
+                        val message = firstChoice.getJSONObject("message")
+                        val content = message.getString("content")
+
+                        // Updating the TextView with the response content
+                        responseTV.text = content
+                    }
                 },
                 // adding on error listener
                 Response.ErrorListener { error ->
@@ -163,7 +192,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     // adding headers on below line.
                     params["Content-Type"] = "application/json"
                     params["Authorization"] =
-                        "Bearer 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"
+                        "Bearer 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"
                     return params;
                 }
             }
