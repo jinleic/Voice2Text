@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     lateinit var micIV: ImageView
     lateinit var btnSpeak : Button
     lateinit var tts : TextToSpeech
+    lateinit var send : ImageView
 
 //    var url = "https://api.openai.com/v1/completions"
 
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         queryEdt = findViewById(R.id.idEdtQuery)
         micIV = findViewById(R.id.idMic)
         btnSpeak = findViewById(R.id.btn_speak)
+        send = findViewById(R.id.idSend)
 
         // for text to speech
         btnSpeak!!.isEnabled = false
@@ -88,6 +90,16 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
 
+        send.setOnClickListener{
+            responseTV.text = "Please wait.."
+            // validating text
+            if (queryEdt.text.toString().length > 0) {
+                // calling get response to get the response.
+                getResponse(queryEdt.text.toString())
+            } else {
+                Toast.makeText(this, "Please enter your query..", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         // adding editor action listener for edit text on below line.
         queryEdt.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->

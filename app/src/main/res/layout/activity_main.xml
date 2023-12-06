@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_500"
+    android:background="@drawable/thu_0686"
     tools:context=".MainActivity">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="390dp"
+        android:layout_height="474dp"
         android:layout_above="@+id/linear2"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="7dp"
         android:padding="5dp">
 
         <LinearLayout
@@ -27,56 +27,66 @@
             <TextView
                 android:id="@+id/idTVQuestion"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="45dp"
                 android:layout_marginTop="30dp"
                 android:padding="4dp"
                 android:text="Question"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
             <Button
                 android:id="@+id/btn_speak"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="speak" />
+                android:layout_height="wrap_content "
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/custom_button"
+                android:elevation="4dp"
+                android:padding="10dp"
+                android:text="Speak"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
             <!-- text view for displaying response-->
             <TextView
                 android:id="@+id/idTVResponse"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="71dp"
                 android:layout_marginTop="5dp"
                 android:padding="4dp"
-                android:text="Response"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:text="Response from GPT"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp"
         android:id="@+id/linear2"
+        android:layout_width="386dp"
+        android:layout_height="108dp"
         android:layout_alignParentBottom="true"
-        >
+        android:layout_marginBottom="0dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/idMic"
+            android:layout_width="50dp"
+            android:layout_height="47dp"
             android:layout_gravity="center_vertical"
             android:paddingEnd="8dp"
-            android:src="@drawable/ic_mic"
-            android:id="@+id/idMic"/>
+            android:src="@drawable/ic_mic" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/idTILQuery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="238dp"
+            android:layout_height="85dp"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="18dp"
             android:hint="Enter your query"
             android:padding="5dp"
             android:textColorHint="@color/white"
@@ -84,10 +94,9 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/idEdtQuery"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/purple_200"
-                android:drawableEnd="@drawable/ic_send"
+                android:layout_width="267dp"
+                android:layout_height="85dp"
+                android:background="@color/black"
                 android:drawableTint="@color/white"
                 android:ems="10"
                 android:imeOptions="actionSend"
@@ -95,8 +104,19 @@
                 android:inputType="textEmailAddress"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/idSend"
+            android:layout_width="57dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center_vertical"
+            android:baselineAligned="false"
+            android:paddingEnd="8dp"
+            android:src="@drawable/ic_send" />
+
     </LinearLayout>
     <!-- text field for asking question-->
 
