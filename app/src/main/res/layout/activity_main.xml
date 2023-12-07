@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:padding="16dp"
-                android:text="Response from GPT"
+                android:text="Response from LLM:"
                 android:textColor="#f3f4f6"
                 android:textSize="20sp"
                 android:fontFamily="sans-serif-light"

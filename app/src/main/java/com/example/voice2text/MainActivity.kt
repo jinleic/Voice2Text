@@ -38,10 +38,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     lateinit var tts : TextToSpeech
     lateinit var send : ImageView
 
-//    var url = "https://api.openai.com/v1/completions"
-
-    var url = "https://api.openai.com/v1/chat/completions"
-
+    val url = "https://09d4-128-210-0-165.ngrok-free.app/v1/chat/completions" // Updated API URL
 
     private val REQUEST_CODE_SPEECH_INPUT = 1
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,63 +148,40 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // creating a queue for request queue.
         val queue: RequestQueue = Volley.newRequestQueue(applicationContext)
         // creating a json object on below line.
-//        val jsonObject: JSONObject? = JSONObject()
-//        // adding params to json object.
-//        jsonObject?.put("model", "text-davinci-003")
-//        jsonObject?.put("prompt", query)
-//        jsonObject?.put("temperature", 0)
-//        jsonObject?.put("max_tokens", 100)
-//        jsonObject?.put("top_p", 1)
-//        jsonObject?.put("frequency_penalty", 0.0)
-//        jsonObject?.put("presence_penalty", 0.0)
-
-        // Creating a new JSON object for the request
         val jsonObject = JSONObject().apply {
-            put("model", "gpt-3.5-turbo")
-            put("temperature", 0.7)
-
-            // Creating a JSON array for messages
+            // The request structure remains largely the same
             val messagesArray = JSONArray()
-
-            // Creating a message object and adding it to the messages array
             val messageObject = JSONObject().apply {
                 put("role", "user")
-                put("content", query)
+                put("content", query) // 'query' should be the user input string
             }
             messagesArray.put(messageObject)
-
-            // Adding the messages array to the main JSON object
             put("messages", messagesArray)
         }
 
-        // on below line making json object request.
-        val postRequest: JsonObjectRequest =
-            object : JsonObjectRequest(Method.POST, url, jsonObject,
-                Response.Listener { response ->
-                    // Extracting the message content from the response
-                    val choicesArray = response.getJSONArray("choices")
-                    if (choicesArray.length() > 0) {
-                        val firstChoice = choicesArray.getJSONObject(0)
-                        val message = firstChoice.getJSONObject("message")
-                        val content = message.getString("content")
+        val postRequest: JsonObjectRequest = object : JsonObjectRequest(Method.POST, url, jsonObject,
+            Response.Listener { response ->
+                // Extracting the message content from the new response format
+                val choicesArray = response.getJSONArray("choices")
+                if (choicesArray.length() > 0) {
+                    val firstChoice = choicesArray.getJSONObject(0)
+                    val message = firstChoice.getJSONObject("message")
+                    val content = message.getString("content") // Updated to match new response format
 
-                        // Updating the TextView with the response content
-                        responseTV.text = content
-                    }
-                },
-                // adding on error listener
-                Response.ErrorListener { error ->
-                    Log.e("TAGAPI", "Error is : " + error.message + "\n" + error)
-                }) {
-                override fun getHeaders(): kotlin.collections.MutableMap<kotlin.String, kotlin.String> {
-                    val params: MutableMap<String, String> = HashMap()
-                    // adding headers on below line.
-                    params["Content-Type"] = "application/json"
-                    params["Authorization"] =
-                        "Bearer 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"
-                    return params;
+                    // Updating the TextView with the response content
+                    responseTV.text = content
                 }
+            },
+            Response.ErrorListener { error ->
+                Log.e("TAGAPI", "Error is : " + error.message + "\n" + error)
+            }) {
+            override fun getHeaders(): kotlin.collections.MutableMap<kotlin.String, kotlin.String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/json"
+                params["Authorization"] = "Bearer YOUR_API_KEY" // Replace with your actual API key
+                return params
             }
+        }
 
         // on below line adding retry policy for our request.
         postRequest.setRetryPolicy(object : RetryPolicy {
